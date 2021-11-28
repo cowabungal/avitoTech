@@ -5,6 +5,8 @@ import (
 	"avitoTech/pkg/repository"
 )
 
+//go:generate mockgen -source=service.go -destination=mocks/mock.go
+
 type Service struct {
 	User
 }

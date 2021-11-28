@@ -21,13 +21,13 @@ type Transfer struct {
 	Amount int `json:"amount" binding:"required"`
 }
 
-func (h *Handler) balance(c *gin.Context) {
+func (h *Handler) Balance(c *gin.Context) {
 	var input UserID
 
 	err := c.BindJSON(&input)
 	if err != nil {
 		logrus.Error("balance: can't get userId: " + err.Error())
-		newErrorResponse(http.StatusInternalServerError, c, "something went wrong")
+		newErrorResponse(http.StatusBadRequest, c, "something went wrong")
 		return
 	}
 
@@ -41,13 +41,13 @@ func (h *Handler) balance(c *gin.Context) {
 	c.JSON(http.StatusOK, ans)
 }
 
-func (h *Handler) topUp(c *gin.Context) {
+func (h *Handler) TopUp(c *gin.Context) {
 	var input Input
 
 	err := c.BindJSON(&input)
 	if err != nil {
 		logrus.Error("topUp: can't get data: " + err.Error())
-		newErrorResponse(http.StatusInternalServerError, c, "something went wrong")
+		newErrorResponse(http.StatusBadRequest, c, "something went wrong")
 		return
 	}
 
@@ -61,13 +61,13 @@ func (h *Handler) topUp(c *gin.Context) {
 	c.JSON(http.StatusOK, ans)
 }
 
-func (h *Handler) debit(c *gin.Context) {
+func (h *Handler) Debit(c *gin.Context) {
 	var input Input
 
 	err := c.BindJSON(&input)
 	if err != nil {
 		logrus.Error("debit: can't get data: " + err.Error())
-		newErrorResponse(http.StatusInternalServerError, c, "something went wrong")
+		newErrorResponse(http.StatusBadRequest, c, "something went wrong")
 		return
 	}
 
@@ -88,13 +88,13 @@ func (h *Handler) debit(c *gin.Context) {
 	c.JSON(http.StatusOK, ans)
 }
 
-func (h *Handler) transfer(c *gin.Context) {
+func (h *Handler) Transfer(c *gin.Context) {
 	var input Transfer
 
 	err := c.BindJSON(&input)
 	if err != nil {
 		logrus.Error("transfer: can't get data: " + err.Error())
-		newErrorResponse(http.StatusInternalServerError, c, "something went wrong")
+		newErrorResponse(http.StatusBadRequest, c, "something went wrong")
 		return
 	}
 
