@@ -18,7 +18,7 @@ func NewUserRepository(db *sqlx.DB) *UserRepository {
 func (r *UserRepository) Balance(userId int) (*avitoTech.User, error) {
 	var ans avitoTech.User
 
-	query := fmt.Sprintf("SELECT * from %s WHERE user_id=$1", usersTable)
+	query := fmt.Sprintf("SELECT * FROM %s WHERE user_id=$1", usersTable)
 	err := r.db.Get(&ans, query, userId)
 
 	return &ans, err
@@ -30,7 +30,7 @@ func (r *UserRepository) TopUp(userId int, amount int) (*avitoTech.User, error) 
 
 	user, err := r.Balance(userId)
 	if err != nil {
-		query = fmt.Sprintf("INSERT INTO %s (user_id, balance) values ($1, $2) RETURNING *", usersTable)
+		query = fmt.Sprintf("INSERT INTO %s (user_id, balance) VALUES ($1, $2) RETURNING *", usersTable)
 		err = r.db.Get(&ans, query, userId, amount)
 	} else {
 		newBalance := user.Balance + amount

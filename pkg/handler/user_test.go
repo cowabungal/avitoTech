@@ -43,7 +43,6 @@ func TestHandler_Balance(t *testing.T) {
 		{
 			name:      "Bad",
 			inputBody: `{"bad": 1}`,
-			inputUser: avitoTech.User{},
 			mockBehavior: func(r *service_mocks.MockUser, user avitoTech.User) {},
 			expectedStatusCode:   400,
 			expectedResponseBody: `{"message":"something went wrong"}`,
@@ -125,9 +124,6 @@ func TestHandler_TopUp(t *testing.T) {
 		{
 			name:      "Bad",
 			inputBody: `{"user_id":1}`,
-			inputUser: Input{
-				UserId: 1,
-			},
 			mockBehavior: func(r *service_mocks.MockUser, input Input) {},
 			expectedStatusCode:   400,
 			expectedResponseBody: `{"message":"something went wrong"}`,
@@ -210,9 +206,6 @@ func TestHandler_Debit(t *testing.T) {
 		{
 			name:      "Bad",
 			inputBody: `{"user_id":1}`,
-			inputUser: Input{
-				UserId: 1,
-			},
 			mockBehavior: func(r *service_mocks.MockUser, input Input) {},
 			expectedStatusCode:   400,
 			expectedResponseBody: `{"message":"something went wrong"}`,
@@ -310,9 +303,6 @@ func TestHandler_Transfer(t *testing.T) {
 		{
 			name:      "Bad",
 			inputBody: `{"user_id":1}`,
-			inputUser: Transfer{
-				UserId: 1,
-			},
 			mockBehavior: func(r *service_mocks.MockUser, input Transfer) {},
 			expectedStatusCode:   400,
 			expectedResponseBody: `{"message":"something went wrong"}`,

@@ -31,11 +31,17 @@ func (h *Handler) Balance(c *gin.Context) {
 		return
 	}
 
+	currency := c.Query("currency")
+
 	ans, err := h.services.User.Balance(input.UserId)
 	if err != nil {
 		logrus.Error("Balance: can't get balance: " + err.Error())
 		newErrorResponse(http.StatusBadRequest, c, "user has no balance")
 		return
+	}
+
+	if currency != "" {
+		ans, err = h.services.User.ConvertBalance(ans, currency)
 	}
 
 	c.JSON(http.StatusOK, ans)

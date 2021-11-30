@@ -49,6 +49,21 @@ func (mr *MockUserMockRecorder) Balance(userId interface{}) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Balance", reflect.TypeOf((*MockUser)(nil).Balance), userId)
 }
 
+// ConvertBalance mocks base method.
+func (m *MockUser) ConvertBalance(ans *avitoTech.User, currency string) (*avitoTech.User, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ConvertBalance", ans, currency)
+	ret0, _ := ret[0].(*avitoTech.User)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ConvertBalance indicates an expected call of ConvertBalance.
+func (mr *MockUserMockRecorder) ConvertBalance(ans, currency interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ConvertBalance", reflect.TypeOf((*MockUser)(nil).ConvertBalance), ans, currency)
+}
+
 // Debit mocks base method.
 func (m *MockUser) Debit(userId, amount int) (*avitoTech.User, error) {
 	m.ctrl.T.Helper()
