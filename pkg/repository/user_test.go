@@ -80,7 +80,7 @@ func TestUserRepository_TopUp(t *testing.T) {
 
 	type args struct {
 		userId int
-		amount int
+		amount float64
 	}
 
 	type mockBehavior func(args args)

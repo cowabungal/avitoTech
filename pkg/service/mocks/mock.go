@@ -65,7 +65,7 @@ func (mr *MockUserMockRecorder) ConvertBalance(ans, currency interface{}) *gomoc
 }
 
 // Debit mocks base method.
-func (m *MockUser) Debit(userId, amount int) (*avitoTech.User, error) {
+func (m *MockUser) Debit(userId int, amount float64) (*avitoTech.User, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Debit", userId, amount)
 	ret0, _ := ret[0].(*avitoTech.User)
@@ -80,7 +80,7 @@ func (mr *MockUserMockRecorder) Debit(userId, amount interface{}) *gomock.Call {
 }
 
 // TopUp mocks base method.
-func (m *MockUser) TopUp(userId, amount int) (*avitoTech.User, error) {
+func (m *MockUser) TopUp(userId int, amount float64) (*avitoTech.User, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "TopUp", userId, amount)
 	ret0, _ := ret[0].(*avitoTech.User)
@@ -95,7 +95,7 @@ func (mr *MockUserMockRecorder) TopUp(userId, amount interface{}) *gomock.Call {
 }
 
 // Transfer mocks base method.
-func (m *MockUser) Transfer(userId, toId, amount int) (*avitoTech.User, error) {
+func (m *MockUser) Transfer(userId, toId int, amount float64) (*avitoTech.User, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Transfer", userId, toId, amount)
 	ret0, _ := ret[0].(*avitoTech.User)

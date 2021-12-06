@@ -12,13 +12,13 @@ type UserID struct {
 
 type Input struct {
 	UserId int `json:"user_id" binding:"required"`
-	Amount int `json:"amount" binding:"required"`
+	Amount float64 `json:"amount" binding:"required"`
 }
 
 type Transfer struct {
 	UserId int `json:"user_id" binding:"required"`
 	ToId   int `json:"to_id" binding:"required"`
-	Amount int `json:"amount" binding:"required"`
+	Amount float64 `json:"amount" binding:"required"`
 }
 
 func (h *Handler) Balance(c *gin.Context) {

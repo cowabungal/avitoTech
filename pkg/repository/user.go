@@ -24,7 +24,7 @@ func (r *UserRepository) Balance(userId int) (*avitoTech.User, error) {
 	return &ans, err
 }
 
-func (r *UserRepository) TopUp(userId int, amount int) (*avitoTech.User, error) {
+func (r *UserRepository) TopUp(userId int, amount float64) (*avitoTech.User, error) {
 	var query string
 	var ans avitoTech.User
 
@@ -41,7 +41,7 @@ func (r *UserRepository) TopUp(userId int, amount int) (*avitoTech.User, error) 
 	return &ans, err
 }
 
-func (r *UserRepository) Debit(userId int, amount int) (*avitoTech.User, error) {
+func (r *UserRepository) Debit(userId int, amount float64) (*avitoTech.User, error) {
 	var ans avitoTech.User
 
 	user, err := r.Balance(userId)
@@ -60,7 +60,7 @@ func (r *UserRepository) Debit(userId int, amount int) (*avitoTech.User, error) 
 	return &ans, err
 }
 
-func (r *UserRepository) Transfer(userId int, toId int, amount int) (*avitoTech.User, error) {
+func (r *UserRepository) Transfer(userId int, toId int, amount float64) (*avitoTech.User, error) {
 	_, err := r.Balance(toId)
 	if err != nil {
 		return nil, errors.New("the recipient has no balance")
