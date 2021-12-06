@@ -7,6 +7,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	sqlmock "github.com/zhashkevych/go-sqlxmock"
 	"testing"
+	"time"
 )
 
 func TestUserRepository_Balance(t *testing.T) {
@@ -104,7 +105,10 @@ func TestUserRepository_TopUp(t *testing.T) {
 					mock.ExpectQuery(fmt.Sprintf("UPDATE %s SET (.+) WHERE (.+)", usersTable)).
 						WithArgs(got.Balance+args.amount, args.userId).WillReturnRows(rows)
 				}
-				mock.ExpectExec(fmt.Sprintf("INSERT INTO %s", transactionsTable)).WithArgs(args.userId, fmt.Sprintf("Top-up by some by %fRUB", args.amount)).WillReturnResult(nil)
+				date := time.Now().Format("01-02-2006 15:04:05")
+				operation := fmt.Sprintf("Top-up by some by %fRUB", args.amount)
+				result := sqlmock.NewResult(0,0)
+				mock.ExpectExec(fmt.Sprintf("INSERT INTO %s", transactionsTable)).WithArgs(args.userId, args.amount, operation, date).WillReturnResult(result)
 			},
 			input: args{
 				userId: 2,

@@ -44,9 +44,8 @@ func (r *UserRepository) TopUp(userId int, amount float64, by string) (*avitoTec
 	}
 
 	//record transaction
-	time := time.Now()
 	//Format MM-DD-YYYY hh:mm:ss
-	date := time.Format("01-02-2006 15:04:05")
+	date := time.Now().Format("01-02-2006 15:04:05")
 	query = fmt.Sprintf("INSERT INTO %s (user_id, amount, operation, date) VALUES ($1, $2, $3, $4)", transactionsTable)
 	operation := fmt.Sprintf("Top-up by %s %fRUB", by, amount)
 	_, err = r.db.Exec(query, userId, amount, operation, date)
@@ -75,9 +74,8 @@ func (r *UserRepository) Debit(userId int, amount float64, by string) (*avitoTec
 	}
 
 	//record transaction
-	time := time.Now()
 	//Format MM-DD-YYYY hh:mm:ss
-	date := time.Format("01-02-2006 15:04:05")
+	date := time.Now().Format("01-02-2006 15:04:05")
 	query = fmt.Sprintf("INSERT INTO %s (user_id, amount, operation, date) VALUES ($1, $2, $3, $4)", transactionsTable)
 	operation := fmt.Sprintf("Debit by %s %fRUB", by, amount)
 	_, err = r.db.Exec(query, userId, amount, operation, date)

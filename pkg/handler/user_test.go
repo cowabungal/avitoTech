@@ -45,7 +45,7 @@ func TestHandler_Balance(t *testing.T) {
 			inputBody: `{"bad": 1}`,
 			mockBehavior: func(r *service_mocks.MockUser, user avitoTech.User) {},
 			expectedStatusCode:   400,
-			expectedResponseBody: `{"message":"something went wrong"}`,
+			expectedResponseBody: `{"message":"can't get userId"}`,
 		},
 		{
 			name:      "no user",

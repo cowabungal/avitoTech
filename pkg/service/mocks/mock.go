@@ -95,18 +95,18 @@ func (mr *MockUserMockRecorder) TopUp(userId, amount interface{}) *gomock.Call {
 }
 
 // Transaction mocks base method.
-func (m *MockUser) Transaction(userId int) (*[]avitoTech.Transaction, error) {
+func (m *MockUser) Transaction(userId int, sort string) (*[]avitoTech.Transaction, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Transaction", userId)
+	ret := m.ctrl.Call(m, "Transaction", userId, sort)
 	ret0, _ := ret[0].(*[]avitoTech.Transaction)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // Transaction indicates an expected call of Transaction.
-func (mr *MockUserMockRecorder) Transaction(userId interface{}) *gomock.Call {
+func (mr *MockUserMockRecorder) Transaction(userId, sort interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Transaction", reflect.TypeOf((*MockUser)(nil).Transaction), userId)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Transaction", reflect.TypeOf((*MockUser)(nil).Transaction), userId, sort)
 }
 
 // Transfer mocks base method.

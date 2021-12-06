@@ -60,11 +60,11 @@ func main() {
 	logrus.Print("avitoTech shutting down")
 
 	if err = srv.Shutdown(context.Background()); err != nil {
-		logrus.Error("error: main: occured on server shutting down: %s", err.Error())
+		logrus.Error("error: main: occured on server shutting down: " + err.Error())
 	}
 
 	if err = db.Close(); err != nil {
-		logrus.Error("error: main: occured on server db connection closed: %s", err.Error())
+		logrus.Error("error: main: occured on server db connection closed: " + err.Error())
 	}
 }
 
