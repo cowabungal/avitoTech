@@ -50,18 +50,18 @@ func (mr *MockUserMockRecorder) Balance(userId interface{}) *gomock.Call {
 }
 
 // ConvertBalance mocks base method.
-func (m *MockUser) ConvertBalance(ans *avitoTech.User, currency string) (*avitoTech.User, error) {
+func (m *MockUser) ConvertBalance(user *avitoTech.User, currency string) (*avitoTech.User, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ConvertBalance", ans, currency)
+	ret := m.ctrl.Call(m, "ConvertBalance", user, currency)
 	ret0, _ := ret[0].(*avitoTech.User)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // ConvertBalance indicates an expected call of ConvertBalance.
-func (mr *MockUserMockRecorder) ConvertBalance(ans, currency interface{}) *gomock.Call {
+func (mr *MockUserMockRecorder) ConvertBalance(user, currency interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ConvertBalance", reflect.TypeOf((*MockUser)(nil).ConvertBalance), ans, currency)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ConvertBalance", reflect.TypeOf((*MockUser)(nil).ConvertBalance), user, currency)
 }
 
 // Debit mocks base method.
@@ -92,6 +92,21 @@ func (m *MockUser) TopUp(userId int, amount float64) (*avitoTech.User, error) {
 func (mr *MockUserMockRecorder) TopUp(userId, amount interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "TopUp", reflect.TypeOf((*MockUser)(nil).TopUp), userId, amount)
+}
+
+// Transaction mocks base method.
+func (m *MockUser) Transaction(userId int) (*[]avitoTech.Transaction, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Transaction", userId)
+	ret0, _ := ret[0].(*[]avitoTech.Transaction)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// Transaction indicates an expected call of Transaction.
+func (mr *MockUserMockRecorder) Transaction(userId interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Transaction", reflect.TypeOf((*MockUser)(nil).Transaction), userId)
 }
 
 // Transfer mocks base method.
