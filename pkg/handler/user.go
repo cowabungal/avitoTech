@@ -87,7 +87,6 @@ func (h *Handler) Debit(c *gin.Context) {
 		default:
 			newErrorResponse(http.StatusInternalServerError, c, "something went wrong")
 		}
-
 		return
 	}
 
@@ -116,7 +115,6 @@ func (h *Handler) Transfer(c *gin.Context) {
 		default:
 			newErrorResponse(http.StatusInternalServerError, c, "something went wrong")
 		}
-
 		return
 	}
 
@@ -133,10 +131,17 @@ func (h *Handler) Transaction(c *gin.Context) {
 		return
 	}
 
-	ans, err := h.services.User.Transaction(input.UserId)
+	sort := c.Query("sort")
+
+	ans, err := h.services.User.Transaction(input.UserId, sort)
 	if err != nil {
 		logrus.Error("transaction: can't get transactions: " + err.Error())
-		newErrorResponse(http.StatusInternalServerError, c, "something went wrong")
+		switch err.Error() {
+		case "bad sort data":
+			newErrorResponse(http.StatusBadRequest, c, "bad sort data")
+		default:
+			newErrorResponse(http.StatusInternalServerError, c, "something went wrong")
+		}
 		return
 	}
 

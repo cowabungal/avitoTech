@@ -6,8 +6,9 @@ CREATE TABLE users
 
 CREATE TABLE transactions
 (
-    id serial not null unique,
-    user_id integer not null,
+    id        serial      not null unique,
+    user_id   integer     not null,
+    amount    float       not null,
     operation varchar(40) not null,
-    date timestamp not null
+    date      timestamp   not null
 );

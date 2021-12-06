@@ -84,6 +84,15 @@ func (s *UserService) ConvertBalance(user *avitoTech.User, currency string) (*av
 	return user, err
 }
 
-func (s *UserService) Transaction(userId int) (*[]avitoTech.Transaction, error) {
-	return s.repo.User.Transaction(userId)
+func (s *UserService) Transaction(userId int, sort string) (*[]avitoTech.Transaction, error) {
+	switch sort {
+	case "":
+		return s.repo.User.Transaction(userId)
+	case "date":
+		return s.repo.User.OrderByDateTransaction(userId)
+	case "amount":
+		return s.repo.User.OrderByAmountTransaction(userId)
+	default:
+		return nil, errors.New("bad sort data")
+	}
 }

@@ -18,4 +18,6 @@ type User interface {
 	TopUp(userId int, amount float64, by string) (*avitoTech.User, error)
 	Debit(userId int, amount float64, by string) (*avitoTech.User, error)
 	Transaction(userId int) (*[]avitoTech.Transaction, error)
+	OrderByDateTransaction(userId int) (*[]avitoTech.Transaction, error)
+	OrderByAmountTransaction(userId int) (*[]avitoTech.Transaction, error)
 }

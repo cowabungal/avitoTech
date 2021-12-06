@@ -47,9 +47,9 @@ func (r *UserRepository) TopUp(userId int, amount float64, by string) (*avitoTec
 	time := time.Now()
 	//Format MM-DD-YYYY hh:mm:ss
 	date := time.Format("01-02-2006 15:04:05")
-	query = fmt.Sprintf("INSERT INTO %s (user_id, operation, date) VALUES ($1, $2, $3)", transactionsTable)
+	query = fmt.Sprintf("INSERT INTO %s (user_id, amount, operation, date) VALUES ($1, $2, $3, $4)", transactionsTable)
 	operation := fmt.Sprintf("Top-up by %s %fRUB", by, amount)
-	_, err = r.db.Exec(query, userId, operation, date)
+	_, err = r.db.Exec(query, userId, amount, operation, date)
 
 	return &ans, err
 }
@@ -78,9 +78,9 @@ func (r *UserRepository) Debit(userId int, amount float64, by string) (*avitoTec
 	time := time.Now()
 	//Format MM-DD-YYYY hh:mm:ss
 	date := time.Format("01-02-2006 15:04:05")
-	query = fmt.Sprintf("INSERT INTO %s (user_id, operation, date) VALUES ($1, $2, $3)", transactionsTable)
+	query = fmt.Sprintf("INSERT INTO %s (user_id, amount, operation, date) VALUES ($1, $2, $3, $4)", transactionsTable)
 	operation := fmt.Sprintf("Debit by %s %fRUB", by, amount)
-	_, err = r.db.Exec(query, userId, operation, date)
+	_, err = r.db.Exec(query, userId, amount, operation, date)
 
 	return &ans, err
 }
@@ -89,7 +89,27 @@ func (r *UserRepository) Transaction(userId int) (*[]avitoTech.Transaction, erro
 	var ans []avitoTech.Transaction
 
 	//sorting from new to old
+	query := fmt.Sprintf("SELECT * FROM %s WHERE user_id=$1", transactionsTable)
+	err := r.db.Select(&ans, query, userId)
+
+	return &ans, err
+}
+
+func (r *UserRepository) OrderByDateTransaction(userId int) (*[]avitoTech.Transaction, error) {
+	var ans []avitoTech.Transaction
+
+	//sorting from new to old
 	query := fmt.Sprintf("SELECT * FROM %s WHERE user_id=$1 ORDER BY date DESC", transactionsTable)
+	err := r.db.Select(&ans, query, userId)
+
+	return &ans, err
+}
+
+func (r *UserRepository) OrderByAmountTransaction(userId int) (*[]avitoTech.Transaction, error) {
+	var ans []avitoTech.Transaction
+
+	//sorting from new to old
+	query := fmt.Sprintf("SELECT * FROM %s WHERE user_id=$1 ORDER BY amount DESC", transactionsTable)
 	err := r.db.Select(&ans, query, userId)
 
 	return &ans, err
