@@ -10,4 +10,5 @@ type Transaction struct {
 	Id      int `json:"-" db:"id"`
 	UserId  int `json:"user_id" db:"user_id"`
 	Operation string `json:"operation" db:"operation"`
+	Date string `json:"date" db:"date"`
 }

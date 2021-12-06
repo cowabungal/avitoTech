@@ -104,6 +104,7 @@ func TestUserRepository_TopUp(t *testing.T) {
 					mock.ExpectQuery(fmt.Sprintf("UPDATE %s SET (.+) WHERE (.+)", usersTable)).
 						WithArgs(got.Balance+args.amount, args.userId).WillReturnRows(rows)
 				}
+				mock.ExpectExec(fmt.Sprintf("INSERT INTO %s", transactionsTable)).WithArgs(args.userId, fmt.Sprintf("Top-up by some by %fRUB", args.amount)).WillReturnResult(nil)
 			},
 			input: args{
 				userId: 2,
@@ -121,7 +122,7 @@ func TestUserRepository_TopUp(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			tt.mock(tt.input)
 
-			got, err := r.TopUp(tt.input.userId, tt.input.amount)
+			got, err := r.TopUp(tt.input.userId, tt.input.amount, "some by")
 			if tt.wantErr {
 				assert.Error(t, err)
 			} else {

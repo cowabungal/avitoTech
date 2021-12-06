@@ -27,7 +27,7 @@ func (h *Handler) Balance(c *gin.Context) {
 	err := c.BindJSON(&input)
 	if err != nil {
 		logrus.Error("balance: can't get userId: " + err.Error())
-		newErrorResponse(http.StatusBadRequest, c, "something went wrong")
+		newErrorResponse(http.StatusBadRequest, c, "can't get userId")
 		return
 	}
 
@@ -128,8 +128,8 @@ func (h *Handler) Transaction(c *gin.Context) {
 
 	err := c.BindJSON(&input)
 	if err != nil {
-		logrus.Error("transaction: can't get data: " + err.Error())
-		newErrorResponse(http.StatusBadRequest, c, "something went wrong")
+		logrus.Error("transaction: can't get userId: " + err.Error())
+		newErrorResponse(http.StatusBadRequest, c, "can't get userId")
 		return
 	}
 

@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/jmoiron/sqlx"
+	"time"
 )
 
 type UserRepository struct {
@@ -24,7 +25,7 @@ func (r *UserRepository) Balance(userId int) (*avitoTech.User, error) {
 	return &ans, err
 }
 
-func (r *UserRepository) TopUp(userId int, amount float64) (*avitoTech.User, error) {
+func (r *UserRepository) TopUp(userId int, amount float64, by string) (*avitoTech.User, error) {
 	var query string
 	var ans avitoTech.User
 
@@ -43,14 +44,17 @@ func (r *UserRepository) TopUp(userId int, amount float64) (*avitoTech.User, err
 	}
 
 	//record transaction
-	query = fmt.Sprintf("INSERT INTO %s (user_id, operation) VALUES ($1, $2)", transactionsTable)
-	operation := fmt.Sprintf("Top-up %fRUB", amount)
-	_, err = r.db.Exec(query, userId, operation)
+	time := time.Now()
+	//Format MM-DD-YYYY hh:mm:ss
+	date := time.Format("01-02-2006 15:04:05")
+	query = fmt.Sprintf("INSERT INTO %s (user_id, operation, date) VALUES ($1, $2, $3)", transactionsTable)
+	operation := fmt.Sprintf("Top-up by %s %fRUB", by, amount)
+	_, err = r.db.Exec(query, userId, operation, date)
 
 	return &ans, err
 }
 
-func (r *UserRepository) Debit(userId int, amount float64) (*avitoTech.User, error) {
+func (r *UserRepository) Debit(userId int, amount float64, by string) (*avitoTech.User, error) {
 	var ans avitoTech.User
 
 	user, err := r.Balance(userId)
@@ -71,33 +75,21 @@ func (r *UserRepository) Debit(userId int, amount float64) (*avitoTech.User, err
 	}
 
 	//record transaction
-	query = fmt.Sprintf("INSERT INTO %s (user_id, operation) VALUES ($1, $2)", transactionsTable)
-	operation := fmt.Sprintf("Debit %fRUB", amount)
-	_, err = r.db.Exec(query, userId, operation)
+	time := time.Now()
+	//Format MM-DD-YYYY hh:mm:ss
+	date := time.Format("01-02-2006 15:04:05")
+	query = fmt.Sprintf("INSERT INTO %s (user_id, operation, date) VALUES ($1, $2, $3)", transactionsTable)
+	operation := fmt.Sprintf("Debit by %s %fRUB", by, amount)
+	_, err = r.db.Exec(query, userId, operation, date)
 
 	return &ans, err
-}
-
-func (r *UserRepository) Transfer(userId int, toId int, amount float64) (*avitoTech.User, error) {
-	_, err := r.Balance(toId)
-	if err != nil {
-		return nil, errors.New("the recipient has no balance")
-	}
-
-	_, err = r.Debit(userId, amount)
-	if err != nil {
-		return nil, err
-	}
-
-	ans, err := r.TopUp(toId, amount)
-
-	return ans, err
 }
 
 func (r *UserRepository) Transaction(userId int) (*[]avitoTech.Transaction, error) {
 	var ans []avitoTech.Transaction
 
-	query := fmt.Sprintf("SELECT * FROM %s WHERE user_id=$1", transactionsTable)
+	//sorting from new to old
+	query := fmt.Sprintf("SELECT * FROM %s WHERE user_id=$1 ORDER BY date DESC", transactionsTable)
 	err := r.db.Select(&ans, query, userId)
 
 	return &ans, err
