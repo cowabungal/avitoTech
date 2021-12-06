@@ -20,5 +20,6 @@ type User interface {
 	TopUp(userId int, amount float64) (*avitoTech.User, error)
 	Debit(userId int, amount float64) (*avitoTech.User, error)
 	Transfer(userId int, toId int, amount float64) (*avitoTech.User, error)
-	ConvertBalance(ans *avitoTech.User, currency string) (*avitoTech.User, error)
+	ConvertBalance(user *avitoTech.User, currency string) (*avitoTech.User, error)
+	Transaction(userId int) (*[]avitoTech.Transaction, error)
 }

@@ -64,3 +64,7 @@ func (s *UserService) ConvertBalance(user *avitoTech.User, currency string) (*av
 
 	return user, err
 }
+
+func (s *UserService) Transaction(userId int) (*[]avitoTech.Transaction, error) {
+	return s.repo.User.Transaction(userId)
+}

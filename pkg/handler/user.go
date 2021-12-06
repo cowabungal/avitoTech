@@ -122,3 +122,32 @@ func (h *Handler) Transfer(c *gin.Context) {
 
 	c.JSON(http.StatusOK, ans)
 }
+
+func (h *Handler) Transaction(c *gin.Context) {
+	var input UserID
+
+	err := c.BindJSON(&input)
+	if err != nil {
+		logrus.Error("transaction: can't get data: " + err.Error())
+		newErrorResponse(http.StatusBadRequest, c, "something went wrong")
+		return
+	}
+
+	ans, err := h.services.User.Transaction(input.UserId)
+	if err != nil {
+		logrus.Error("transaction: can't get transactions: " + err.Error())
+
+		switch err.Error() {
+		case "insufficient funds":
+			newErrorResponse(http.StatusBadRequest, c, "insufficient funds")
+		case "the recipient has no balance":
+			newErrorResponse(http.StatusBadRequest, c, "the recipient has no balance")
+		default:
+			newErrorResponse(http.StatusInternalServerError, c, "something went wrong")
+		}
+
+		return
+	}
+
+	c.JSON(http.StatusOK, ans)
+}

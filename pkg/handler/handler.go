@@ -23,5 +23,6 @@ func (h *Handler) InitRoutes() *gin.Engine {
 	router.GET("/balance", h.Balance)
 	router.POST("/debit", h.Debit)
 	router.POST("/transfer", h.Transfer)
+	router.GET("/transaction", h.Transaction)
 	return router
 }

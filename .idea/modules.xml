@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project version="4">
-  <component name="ProjectModuleManager">
-    <modules>
-      <module fileurl="file://$PROJECT_DIR$/../GoNotesAPI/.idea/GoNotesAPI.iml" filepath="$PROJECT_DIR$/../GoNotesAPI/.idea/GoNotesAPI.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../avitoTech/.idea/avitoTech.iml" filepath="$PROJECT_DIR$/../avitoTech/.idea/avitoTech.iml" />
-    </modules>
-  </component>
-</project>
