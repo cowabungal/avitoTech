@@ -44,7 +44,7 @@ func (r *UserRepository) TopUp(userId int, amount float64) (*avitoTech.User, err
 
 	//record transaction
 	query = fmt.Sprintf("INSERT INTO %s (user_id, operation) VALUES ($1, $2)", transactionsTable)
-	operation := fmt.Sprintf("Top-up %.2fRUB", amount)
+	operation := fmt.Sprintf("Top-up %fRUB", amount)
 	_, err = r.db.Exec(query, userId, operation)
 
 	return &ans, err
@@ -65,6 +65,15 @@ func (r *UserRepository) Debit(userId int, amount float64) (*avitoTech.User, err
 
 	query := fmt.Sprintf("UPDATE %s SET balance=$1 WHERE user_id=$2 RETURNING *", usersTable)
 	err = r.db.Get(&ans, query, newBalance, userId)
+
+	if err != nil {
+		return &ans, err
+	}
+
+	//record transaction
+	query = fmt.Sprintf("INSERT INTO %s (user_id, operation) VALUES ($1, $2)", transactionsTable)
+	operation := fmt.Sprintf("Debit %fRUB", amount)
+	_, err = r.db.Exec(query, userId, operation)
 
 	return &ans, err
 }
@@ -88,7 +97,7 @@ func (r *UserRepository) Transfer(userId int, toId int, amount float64) (*avitoT
 func (r *UserRepository) Transaction(userId int) (*[]avitoTech.Transaction, error) {
 	var ans []avitoTech.Transaction
 
-	query := fmt.Sprintf("SELECT transactions.id, transactions.user_id, transactions.operation FROM %s WHERE user_id=$1", transactionsTable)
+	query := fmt.Sprintf("SELECT * FROM %s WHERE user_id=$1", transactionsTable)
 	err := r.db.Select(&ans, query, userId)
 
 	return &ans, err
