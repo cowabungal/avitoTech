@@ -1,19 +1,16 @@
 .PHONY:
 
 build:
-	go build -o ./.bin/main cmd/main.go
+	docker-compose build app
 
-run: build
-	./.bin/main
-
-clear:
-	rm -rf ./.bin
+run:
+	docker-compose up app
 
 migrate-up:
-	migrate -path ./schema -database 'postgres://postgres:qwerty@localhost:5433/postgres?sslmode=disable' up
+	migrate -path ./schema -database 'postgres://postgres:qwerty@localhost:5434/postgres?sslmode=disable' up
 
 migrate-down:
-	migrate -path ./schema -database 'postgres://postgres:qwerty@localhost:5433/postgres?sslmode=disable' down
+	migrate -path ./schema -database 'postgres://postgres:qwerty@localhost:5434/postgres?sslmode=disable' down
 
 run-test:
 	 go test ./... -cover
