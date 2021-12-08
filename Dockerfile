@@ -1,18 +1,20 @@
-FROM golang:1.17-alpine AS builder
+FROM golang:latest
 
 RUN go version
 
 COPY . /avitoTech/
 WORKDIR /avitoTech/
 
+# build go app
 RUN go mod download
-RUN GOOS=linux go build -o ./.bin/main ./cmd/main.go
+RUN GOOS=linux go build -o app ./cmd/main.go
 
-FROM alpine:latest
+# install psql
+RUN apt-get update
+RUN apt-get -y install postgresql-client
 
-WORKDIR /root/
+# make wait-for-postgres.sh executable
+RUN sed -i -e 's/\r$//' *.sh
+RUN chmod +x wait-for-postgres.sh
 
-COPY --from=0 /avitoTech/.bin/main .
-COPY --from=0 /avitoTech/ .
-
-CMD ["./main"]
+CMD ["./app"]

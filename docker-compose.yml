@@ -1,9 +1,9 @@
-version: '3.8'
+version: "3.8"
 
 services:
-  avito:
+  app:
     build: ./
-    command: ./main
+    command: ./wait-for-postgres.sh db ./app
     ports:
       - 8000:8000
     depends_on:
