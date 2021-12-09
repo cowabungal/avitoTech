@@ -188,6 +188,19 @@ func TestUserRepository_Debit(t *testing.T) {
 				Balance: 5,
 			},
 		},
+		{
+			name: "User has no balance",
+			mock: func(args args) {
+				rows := sqlmock.NewRows([]string{"id", "user_id", "balance"}).AddRow(0, 0, 0).RowError(0, errors.New("some error"))
+				mock.ExpectQuery(fmt.Sprintf("SELECT (.+) FROM %s WHERE (.+)", usersTable)).
+					WithArgs(args.userId).WillReturnRows(rows)
+			},
+			input:   args{
+				userId: 0,
+				amount: 0,
+			},
+			wantErr: true,
+		},
 	}
 
 	for _, tt := range tests {
