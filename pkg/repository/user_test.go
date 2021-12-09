@@ -138,6 +138,192 @@ func TestUserRepository_TopUp(t *testing.T) {
 	}
 }
 
+func TestUserRepository_Transaction(t *testing.T) {
+	db, mock, err := sqlmock.Newx()
+	if err != nil {
+		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
+	}
+	defer db.Close()
+
+	r := NewUserRepository(db)
+
+	type mockBehavior func(userId int)
+
+	tests := []struct {
+		name    string
+		mock    mockBehavior
+		input   int
+		want    *[]avitoTech.Transaction
+		wantErr bool
+	}{
+		{
+			name: "Ok",
+			mock: func(userId int) {
+				rows := sqlmock.NewRows([]string{"id", "user_id", "amount", "operation", "date"}).AddRow(1, userId, 1000, "Top-up by bank_card", "date")
+				mock.ExpectQuery(fmt.Sprintf("SELECT (.+) FROM %s WHERE (.+)", transactionsTable)).
+					WithArgs(userId).WillReturnRows(rows)
+			},
+			input: 1,
+			want: &[]avitoTech.Transaction{
+				{Id: 1,
+					UserId:    1,
+					Amount:    1000,
+					Operation: "Top-up by bank_card",
+					Date:      "date",
+				}},
+		},
+		{
+			name: "User has no transaction",
+			mock: func(userId int) {
+				rows := sqlmock.NewRows([]string{"id", "user_id", "amount", "operation", "date"}).AddRow(0, 0, 0,"","").RowError(0, errors.New("some error"))
+				mock.ExpectQuery(fmt.Sprintf("SELECT (.+) FROM %s WHERE (.+)", transactionsTable)).
+					WithArgs(userId).WillReturnRows(rows)
+			},
+			input:   0,
+			wantErr: true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			tt.mock(tt.input)
+
+			got, err := r.Transaction(tt.input)
+			if tt.wantErr {
+				assert.Error(t, err)
+			} else {
+				assert.NoError(t, err)
+				assert.Equal(t, tt.want, got)
+			}
+			assert.NoError(t, mock.ExpectationsWereMet())
+		})
+	}
+}
+
+func TestUserRepository_OrderByDateTransaction(t *testing.T) {
+	db, mock, err := sqlmock.Newx()
+	if err != nil {
+		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
+	}
+	defer db.Close()
+
+	r := NewUserRepository(db)
+
+	type mockBehavior func(userId int)
+
+	tests := []struct {
+		name    string
+		mock    mockBehavior
+		input   int
+		want    *[]avitoTech.Transaction
+		wantErr bool
+	}{
+		{
+			name: "Ok",
+			mock: func(userId int) {
+				rows := sqlmock.NewRows([]string{"id", "user_id", "amount", "operation", "date"}).AddRow(1, userId, 1000, "Top-up by bank_card", "date")
+				mock.ExpectQuery(fmt.Sprintf("SELECT (.+) FROM %s WHERE (.+)", transactionsTable)).
+					WithArgs(userId).WillReturnRows(rows)
+			},
+			input: 1,
+			want: &[]avitoTech.Transaction{
+				{Id: 1,
+					UserId:    1,
+					Amount:    1000,
+					Operation: "Top-up by bank_card",
+					Date:      "date",
+				}},
+		},
+		{
+			name: "User has no transaction",
+			mock: func(userId int) {
+				rows := sqlmock.NewRows([]string{"id", "user_id", "amount", "operation", "date"}).AddRow(0, 0, 0,"","").RowError(0, errors.New("some error"))
+				mock.ExpectQuery(fmt.Sprintf("SELECT (.+) FROM %s WHERE (.+)", transactionsTable)).
+					WithArgs(userId).WillReturnRows(rows)
+			},
+			input:   0,
+			wantErr: true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			tt.mock(tt.input)
+
+			got, err := r.OrderByDateTransaction(tt.input)
+			if tt.wantErr {
+				assert.Error(t, err)
+			} else {
+				assert.NoError(t, err)
+				assert.Equal(t, tt.want, got)
+			}
+			assert.NoError(t, mock.ExpectationsWereMet())
+		})
+	}
+}
+
+func TestUserRepository_OrderByAmountTransaction(t *testing.T) {
+	db, mock, err := sqlmock.Newx()
+	if err != nil {
+		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
+	}
+	defer db.Close()
+
+	r := NewUserRepository(db)
+
+	type mockBehavior func(userId int)
+
+	tests := []struct {
+		name    string
+		mock    mockBehavior
+		input   int
+		want    *[]avitoTech.Transaction
+		wantErr bool
+	}{
+		{
+			name: "Ok",
+			mock: func(userId int) {
+				rows := sqlmock.NewRows([]string{"id", "user_id", "amount", "operation", "date"}).AddRow(1, userId, 1000, "Top-up by bank_card", "date")
+				mock.ExpectQuery(fmt.Sprintf("SELECT (.+) FROM %s WHERE (.+)", transactionsTable)).
+					WithArgs(userId).WillReturnRows(rows)
+			},
+			input: 1,
+			want: &[]avitoTech.Transaction{
+				{Id: 1,
+					UserId:    1,
+					Amount:    1000,
+					Operation: "Top-up by bank_card",
+					Date:      "date",
+				}},
+		},
+		{
+			name: "User has no transaction",
+			mock: func(userId int) {
+				rows := sqlmock.NewRows([]string{"id", "user_id", "amount", "operation", "date"}).AddRow(0, 0, 0,"","").RowError(0, errors.New("some error"))
+				mock.ExpectQuery(fmt.Sprintf("SELECT (.+) FROM %s WHERE (.+)", transactionsTable)).
+					WithArgs(userId).WillReturnRows(rows)
+			},
+			input:   0,
+			wantErr: true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			tt.mock(tt.input)
+
+			got, err := r.OrderByAmountTransaction(tt.input)
+			if tt.wantErr {
+				assert.Error(t, err)
+			} else {
+				assert.NoError(t, err)
+				assert.Equal(t, tt.want, got)
+			}
+			assert.NoError(t, mock.ExpectationsWereMet())
+		})
+	}
+}
+
 /*
 func TestUserRepository_Debit(t *testing.T) {
 	db, mock, err := sqlmock.Newx()

@@ -140,7 +140,7 @@ func (h *Handler) Transaction(c *gin.Context) {
 		case "bad sort data":
 			newErrorResponse(http.StatusBadRequest, c, "bad sort data")
 		default:
-			newErrorResponse(http.StatusInternalServerError, c, "something went wrong")
+			newErrorResponse(http.StatusBadRequest, c, "user has no transaction")
 		}
 		return
 	}
