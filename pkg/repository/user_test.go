@@ -138,6 +138,74 @@ func TestUserRepository_TopUp(t *testing.T) {
 	}
 }
 
+func TestUserRepository_Debit(t *testing.T) {
+	db, mock, err := sqlmock.Newx()
+	if err != nil {
+		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
+	}
+	defer db.Close()
+
+	r := NewUserRepository(db)
+
+	type args struct {
+		userId int
+		amount float64
+	}
+
+	type mockBehavior func(args args)
+
+	tests := []struct {
+		name    string
+		mock    mockBehavior
+		input   args
+		want    *avitoTech.User
+		wantErr bool
+	}{
+		{
+			name: "Ok",
+			mock: func(args args) {
+				rows := sqlmock.NewRows([]string{"id", "user_id", "balance"}).AddRow(1, args.userId, 10)
+				mock.ExpectQuery(fmt.Sprintf("SELECT (.+) FROM %s WHERE (.+)", usersTable)).
+					WithArgs(args.userId).WillReturnRows(rows)
+
+				rows = sqlmock.NewRows([]string{"id", "user_id", "balance"}).AddRow(1, args.userId, 5)
+				mock.ExpectQuery(fmt.Sprintf("UPDATE %s SET (.+) WHERE (.+)", usersTable)).
+					WithArgs(args.amount, args.userId).WillReturnRows(rows)
+
+				date := time.Now().Format("01-02-2006 15:04:05")
+				operation := fmt.Sprintf("Debit by some by %fRUB", args.amount)
+				result := sqlmock.NewResult(0,0)
+				mock.ExpectExec(fmt.Sprintf("INSERT INTO %s", transactionsTable)).WithArgs(args.userId, args.amount, operation, date).WillReturnResult(result)
+
+			},
+			input: args{
+				userId: 1,
+				amount: 5,
+			},
+			want: &avitoTech.User{
+				Id:      1,
+				UserId:  1,
+				Balance: 5,
+			},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			tt.mock(tt.input)
+
+			got, err := r.Debit(tt.input.userId, tt.input.amount, "some by")
+			if tt.wantErr {
+				assert.Error(t, err)
+			} else {
+				assert.NoError(t, err)
+				assert.Equal(t, tt.want, got)
+			}
+			assert.NoError(t, mock.ExpectationsWereMet())
+		})
+	}
+}
+
 func TestUserRepository_Transaction(t *testing.T) {
 	db, mock, err := sqlmock.Newx()
 	if err != nil {
@@ -323,63 +391,3 @@ func TestUserRepository_OrderByAmountTransaction(t *testing.T) {
 		})
 	}
 }
-
-/*
-func TestUserRepository_Debit(t *testing.T) {
-	db, mock, err := sqlmock.Newx()
-	if err != nil {
-		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
-	}
-	defer db.Close()
-
-	r := NewUserRepository(db)
-
-	type args struct {
-		userId int
-		amount int
-	}
-
-	type mockBehavior func(args args)
-
-	tests := []struct {
-		name    string
-		mock    mockBehavior
-		input   args
-		want    *avitoTech.User
-		wantErr bool
-	}{
-		{
-			name: "Ok",
-			mock: func(args args) {
-				rows := sqlmock.NewRows([]string{"id", "user_id", "balance"}).AddRow(3, args.userId, 100)
-				mock.ExpectQuery(fmt.Sprintf("UPDATE %s SET (.+) WHERE (.+)", usersTable)).
-					WithArgs(args.amount, args.userId).WillReturnRows(rows)
-			},
-			input: args{
-				userId: 3,
-				amount: 50,
-			},
-			want: &avitoTech.User{
-				Id:      3,
-				UserId:  3,
-				Balance: 100,
-			},
-		},
-	}
-
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			tt.mock(tt.input)
-
-			got, err := r.Debit(tt.input.userId, tt.input.amount)
-			if tt.wantErr {
-				assert.Error(t, err)
-			} else {
-				assert.NoError(t, err)
-				assert.Equal(t, tt.want, got)
-			}
-			assert.NoError(t, mock.ExpectationsWereMet())
-		})
-	}
-}
-*/
