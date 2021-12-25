@@ -25,7 +25,7 @@
 - Работа с СУБД Postgres с использованием библиотеки [sqlx](https://github.com/jmoiron/sqlx) и написанием SQL запросов.
 - Конфигурация приложения - библиотека [viper](https://github.com/spf13/viper).
 - Запуск из Docker.
-- Unit - тестирование уровней бизнес-логики и взаимодействия с БД с помощью моков - библиотеки [testify](https://github.com/stretchr/testify), [mock](https://github.com/golang/mock).
+- Unit/Интеграционное - тестирование уровней обработчикоов, бизнес-логики и взаимодействия с БД с помощью моков - библиотеки [testify](https://github.com/stretchr/testify), [mock](https://github.com/golang/mock).
 
 **Структура проекта:**
 ```
